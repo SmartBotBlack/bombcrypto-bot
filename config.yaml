@@ -71,7 +71,7 @@
     #
     # [pt_BR]
     # Valor padrão: 0.8
-    select_wallet_buttons: 0.8
+    select_wallet_buttons: 0.5
 
     # [en_US]
     # Default value: 0.9
