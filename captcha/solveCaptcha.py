@@ -32,7 +32,7 @@ else:
     s = load_images( './captcha/small-digits/')
 
 #TODO tirar duplicata
-def positions(target, threshold=0.88,img = None):
+def positions(target, threshold=0.65,img = None):
     if img is None:
         img = printSreen()
     result = cv2.matchTemplate(img,target,cv2.TM_CCOEFF_NORMED)
@@ -104,7 +104,7 @@ def smallDigitsImg(img, pos,w = 200, h = 70):
     cropped = img[ y : y + h , x: x + w]
     return cropped
 
-def position(target, threshold=0.85,img = None):
+def position(target, threshold=0.65,img = None):
     if img is None:
         img = printSreen()
     result = cv2.matchTemplate(img,target,cv2.TM_CCOEFF_NORMED)

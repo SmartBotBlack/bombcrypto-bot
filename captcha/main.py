@@ -35,7 +35,7 @@ def printSreen():
         # Grab the data
         return sct_img[:,:,:3]
 
-def position(target, threshold=0.85,img = None):
+def position(target, threshold=0.65,img = None):
     if img is None:
         img = printSreen()
     result = cv2.matchTemplate(img,target,cv2.TM_CCOEFF_NORMED)
@@ -55,7 +55,7 @@ def position(target, threshold=0.85,img = None):
         x,y, w,h = rectangles[0]
         return (x+(w/2),y+h/2)
 
-def positions(target, threshold=0.85,img = None):
+def positions(target, threshold=0.65,img = None):
     if img is None:
         img = printSreen()
     result = cv2.matchTemplate(img,target,cv2.TM_CCOEFF_NORMED)
