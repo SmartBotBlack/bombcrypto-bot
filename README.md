@@ -22,7 +22,8 @@ The bot does not interact directly with the game, it only takes screenshots of t
 ## Bot update instructions
 In the game from time to time come out updates, and the bot is also updated. From time to time it is necessary to update the source code.
 1. Open the console and go to the folder with the bot `cd ~/bombcrypto-bot`
-2. Download the new code `git checkout -- captcha && git pull origin main` 
+2. Clear space `git checkout -- captcha` 
+3. Download the new code `git pull origin main` 
 
 
 
