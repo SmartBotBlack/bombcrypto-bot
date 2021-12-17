@@ -7,7 +7,7 @@ The bot does not interact directly with the game, it only takes screenshots of t
 1. Install [python](https://www.python.org/downloads/release/python-399/)
 2. Install [git](https://git-scm.com/download/win)
 3. Go to the home folder `cd ~`
-4. Clone a repository `git clone git@github.com:SmartBotBlack/bombcrypto-bot.git`
+4. Clone a repository `git clone https://github.com/SmartBotBlack/bombcrypto-bot.git`
 5. Go to the folder with the game `cd ~/bombcrypto-bot`
 6. Set the dependencies `pip install -r requirements.txt`
 
