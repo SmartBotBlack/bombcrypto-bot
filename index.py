@@ -63,7 +63,8 @@ if not ch['enable']:
     print('>>---> Home feature not enabled')
 print('\n')
 
-pyautogui.PAUSE = c['time_intervals']['interval_between_moviments']
+pause = c['time_intervals']['interval_between_moviments']
+pyautogui.PAUSE = pause
 
 pyautogui.FAILSAFE = False
 hero_clicks = 0
@@ -164,8 +165,7 @@ def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
         pass
         # print('waiting for "{}" button, timeout of {}s'.format(name, timeout))
     start = time.time()
-    clicked = False
-    while(not clicked):
+    while(True):
         matches = positions(img, threshold=threshold)
         if(len(matches)==0):
             hast_timed_out = time.time()-start > timeout
@@ -184,6 +184,8 @@ def clickBtn(img,name=None, timeout=3, threshold = ct['default']):
         moveToWithRandomness(pos_click_x,pos_click_y,1)
         pyautogui.click()
         return True
+        print("THIS SHOULD NOT PRINT")
+
 
 def printSreen():
     with mss.mss() as sct:
@@ -320,12 +322,12 @@ def goToHeroes():
         global login_attempts
         login_attempts = 0
 
-    solveCaptcha()
+    solveCaptcha(pause)
     #TODO tirar o sleep quando colocar o pulling
     time.sleep(1)
     clickBtn(images['hero-icon'])
     time.sleep(1)
-    solveCaptcha()
+    solveCaptcha(pause)
 
 def goToGame():
     # in case of server overload popup
@@ -355,9 +357,9 @@ def login():
         return
 
     if clickBtn(images['connect-wallet'], name='connectWalletBtn', timeout = 10):
-        solveCaptcha()
-        login_attempts = login_attempts + 1
         logger('🎉 Connect wallet button detected, logging in!')
+        solveCaptcha(pause)
+        login_attempts = login_attempts + 1
         #TODO mto ele da erro e poco o botao n abre
         # time.sleep(10)
 
@@ -487,7 +489,7 @@ def main():
 
         if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
             last["check_for_captcha"] = now
-            solveCaptcha()
+            solveCaptcha(pause)
 
         if now - last["heroes"] > addRandomness(t['send_heroes_for_work'] * 60):
             last["heroes"] = now
@@ -506,7 +508,7 @@ def main():
 
 
         if now - last["refresh_heroes"] > addRandomness( t['refresh_heroes_positions'] * 60):
-            solveCaptcha()
+            solveCaptcha(pause)
             last["refresh_heroes"] = now
             refreshHeroesPositions()
 
@@ -520,21 +522,12 @@ def main():
 
 
 main()
-# sendHeroesHome()
 
 
 #cv2.imshow('img',sct_img)
 #cv2.waitKey()
 
-# chacar se tem o sign antes de aperta o connect wallet ?
-# arrumar aquela parte do codigo copiado onde tem q checar o sign 2 vezes ?
 # colocar o botao em pt
-# melhorar o log
-# salvar timestamp dos clickes em newmap em um arquivo
 # soh resetar posiçoes se n tiver clickado em newmap em x segundos
 
-# pegar o offset dinamicamente
-# clickar so no q nao tao trabalhando pra evitar um loop infinito no final do scroll se ainda tiver um verdinho
-# pip uninstall opencv-python
 
-# pip install --upgrade opencv-python==4.5.3.56

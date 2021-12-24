@@ -283,74 +283,73 @@ def getSmallDigits(img, threshold=0.95,i=0):
     if len(digits) > 3:
         return getSmallDigits(img,threshold=threshold+0.07,i=i+1)
 
-def lookForMatch(background_digits,popup_pos, has_found):
+def lookForMatch(background_digits,popup_pos):
         screenshot = printSreen()
         popup_pos = positions(d['robot'],img=screenshot)
-        threshold = 0.95
+        captcha_img = smallDigitsImg(screenshot, popup_pos[0])
+        small_digits, _ = getSmallDigits(captcha_img)
+        print('Foreground digits: {}'.format(small_digits))
+        if small_digits == background_digits:
+            print('FOUND!', flush=True)
+            return True
+        return False
 
-        for i in range(100):
-            screenshot = printSreen()
-            captcha_img = smallDigitsImg(screenshot, popup_pos[0])
-            small_digits, threshold = getSmallDigits(captcha_img, threshold=threshold)
-            if small_digits == background_digits:
-                pyautogui.mouseUp()
-                print('FOUND!', flush=True)
-                has_found[0] = True
-                return
+def solveCaptcha(pause, attempts=0):
+    #removes pyautogui default pause between moviments and adds again at the end
+    pyautogui.PAUSE = pause
 
-def solveCaptcha():
     screenshot = printSreen()
     img = screenshot.copy()
     popup_pos = positions(d['robot'],img=img)
     if len(popup_pos) == 0:
-        print('no captcha popup found!')
-        return
+        # wait and try again
+        time.sleep(2)
+        screenshot = printSreen()
+        img = screenshot.copy()
+        popup_pos = positions(d['robot'],img=img)
+        if len(popup_pos) == 0:
+            print('\nno captcha popup found!')
+            return
+    print('\nCaptcha detected, solving it...')
     img = captchaImg(img, popup_pos[0])
     background_digits = getBackgroundText()
-    print('background = {}'.format(background_digits))
+    print('\nbackground = {}'.format(background_digits))
     x,y = position(d['slider'],img=screenshot)
 
+    # click and hold the slider
     pyautogui.moveTo(x+r(),y+r(),0.8)
-    has_found = [False]
-    watcher = threading.Thread(target=lookForMatch, args =(background_digits,popup_pos,has_found))
-    watcher.start()
     pyautogui.mouseDown()
     time.sleep(1)
+    pyautogui.PAUSE = pause
+
     def movePercentage(n):
         current_x,_ = pyautogui.position()
         speed_factor = 2
-        slider_size = 300
+        slider_size = 360
         destination = x+r()+n*slider_size
         randomness = random()/6
         speed = (abs(current_x - destination)/slider_size)*speed_factor + randomness
         pyautogui.moveTo(destination,y+r(),speed,pyautogui.easeOutQuad)
 
-    randomness = random()/5
-    movePercentage(.4+randomness)
-    if has_found[0]:
-        return
-    randomness = random()/5
-    movePercentage(-0.1+randomness)
-    if has_found[0]:
-        return
-    randomness = random()/5
-    movePercentage(1+randomness)
-    if has_found[0]:
-        return
-    pyautogui.mouseUp()
+    randomness = random()/20
 
-    time.sleep(13)
-    solveCaptcha()
+    for i in range (11):
+        movePercentage((i%10)/10+randomness)
+        if lookForMatch(background_digits,popup_pos):
+            pyautogui.mouseUp()
+            return
+    print('not found...')
+    pyautogui.mouseUp()
+    time.sleep(1)
+    if attempts < 4:
+        solveCaptcha(pause, attempts=attempts+1)
+    else:
+        print('\n too many attempts, giving up to avoid detection')
     return
 
 if __name__ == '__main__':
-    solveCaptcha()
+    pause = 1
+    solveCaptcha(pause)
 #TODO colocar positions em um arquivo separado e importar nos outros.
 # tirar o load digits daqui e passar como argumento na funçao
 
-        # (_, new_diff) = structural_similarity(img0,img1, full=True)
-        # diff[0] = (new_diff * 255).astype("uint8")
-# arrumar o mexer das posiçoes pra ele vazer mais movimentos verticais
-# calcular n de sliders ou fazer recursivamente.
-# fazer os and so no final
-# fazer o bot pegar as top 3 imagens no get digits.
