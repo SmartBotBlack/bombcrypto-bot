@@ -54,7 +54,7 @@ Author of the bot is https://github.com/mpcabete
 
 #### Smart Chain Wallet
 
-0xbd06182D8360FB7AC1B05e871e56c76372510dDf
+0xbd06182D8360FB7AC1B05e871e56c76372510dDf or https://bot.cryptip.xyz/
 
 ### PIX
 
